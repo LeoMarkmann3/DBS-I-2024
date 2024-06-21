@@ -6,20 +6,35 @@ import de.hpi.dbs1.entities.Movie;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-@ChosenImplementation(false)
-public class JDBCExerciseJavaImplementation implements JDBCExercise {//
+@ChosenImplementation(true)
+public class JDBCExerciseJavaImplementation implements JDBCExercise {
 
 	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 	@Override
 	public Connection createConnection(@NotNull ConnectionConfig config) throws SQLException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		String URL = "jdbc:postgresql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase();
+		String name = config.getUsername();
+		String pw = config.getPassword();
+
+		Connection con = null;
+		try {
+			con = DriverManager.getConnection(URL, name, pw);
+			System.out.println("Verbindung erfolgreich!");
+		} catch (SQLException e) {
+			System.out.println("Verbindung fehlgeschlagen!");
+			e.printStackTrace();
+			throw e; // die Ausnahme weitergeben
+		}
+		//throw new UnsupportedOperationException("Not yet implemented");
+		return con;
 	}
 
 	@Override
